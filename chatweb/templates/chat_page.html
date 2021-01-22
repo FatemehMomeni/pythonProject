@@ -1,0 +1,155 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Dento - Dentist &amp; Medical HTML Template">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Title -->
+  <title>چت روم</title>
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="{% static 'chatweb/css/style.css' %}">
+
+</head>
+
+<body>
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="preload-content">
+      <div id="dento-load"></div>
+    </div>
+  </div>
+
+  <!-- ***** Header Area Start ***** -->
+  <header class="header-area">
+    <!-- Top Header Area -->
+    <div class="top-header-area">
+      <div class="container h-100">
+        <div class="row h-100 align-items-center">
+          <!-- Top Content -->
+          <div class="col-6 col-md-9 col-lg-8">
+            <div class="top-header-content">
+              <a data-toggle="tooltip" data-placement="bottom" title="E-mail"><i class="fa fa-envelope"></i> <span>momeni.ui.ac@gmail.com</span></a>
+            </div>
+          </div>
+          <div class="col-6 col-md-3 col-lg-4">
+            <div class="top-header-content text-right">
+              <a data-toggle="tooltip" data-placement="bottom" title="E-mail"><i class="fa fa-envelope"></i> <span>f76.rezaee@gmail.com</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Top Header End -->
+
+    <!-- Main Header Start -->
+    <div class="main-header-area">
+      <div class="classy-nav-container breakpoint-off">
+        <div class="container">
+          <!-- Classy Menu -->
+          <nav class="classy-navbar justify-content-between" id="dentoNav">
+
+            <!-- Logo -->
+            <a class="nav-brand" href="index.html"><img src="{% static 'chatweb/img/core-img/logo.jpg' %}" alt=""></a>
+
+            <!-- Navbar Toggler -->
+            <div class="classy-navbar-toggler">
+              <span class="navbarToggler"><span></span><span></span><span></span></span>
+            </div>
+
+            <!-- Menu -->
+            <div class="classy-menu">
+
+              <!-- Close Button -->
+              <div class="classycloseIcon">
+                <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+              </div>
+
+              <!-- Nav Start -->
+              <div class="classynav">
+                <ul id="nav">
+                  <li><a href="{% url 'home' %}">خروج</a></li>
+                </ul>
+              </div>
+              <!-- Nav End -->
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- ***** Header Area End ***** -->
+
+  <!-- ***** Breadcrumb Area Start ***** -->
+  <div class="breadcumb-area bg-img bg-gradient-overlay" style="background-image: url({% static 'chatweb/img/bg-img/chating.png' %});"></div>
+  <!-- ***** Breadcrumb Area End ***** -->
+
+  <!-- *****Blog Area Start ***** -->
+  <section class="dento-blog-area mt-50" style="background-image: url({% static 'chatweb/img/bg-img/messaging.jpg' %}); background-attachment: fixed;">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-lg-8">
+
+          {% for i in dialog %}
+          <!-- Single Blog Item  show messages here-->
+          <div class="single-blog-item style-2 d-flex flex-wrap align-items-center mb-50">
+            <!-- Blog Thumbnail -->
+            <div class="blog-thumbnail"></div>
+            <!-- Blog Content -->
+            <div class="blog-content" style="border: 1px solid black; background-color:#E0FFFF;">
+              <p><i class="icon_chat_alt"></i> {{ name }}:</p>
+              <p class="post-title">{{ i }}</p>
+              <div class="post-meta">
+                <p><i class="icon_clock_alt"></i></p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          <div class="single-blog-item style-2 d-flex flex-wrap align-items-center mb-50">
+            <!-- Blog Thumbnail -->
+            <div class="blog-thumbnail"></div>
+            <!-- Single Widget Area -->
+            <div class="single-widget-area search-widget">
+              <form action="{% url 'sending' %}" method="post">
+                {% csrf_token %}
+                <input type="text" name="message" class="form-control" size="50" style="border: 1px solid black; background-color:#f1f1c1; text-align:right;" placeholder="...ارسال پیام">
+              </form>
+            </div>
+          </div>
+          <!-- Pagination -->
+          <nav class="dento-pagination mb-100"></nav>
+        </div>
+        <!-- Dento Sidebar Area -->
+        <div class="col-12 col-lg-4">
+          <div class="dento-sidebar">
+            <!-- Single Widget Area -->
+            <div class="single-widget-area adds-widget">
+              <a href="#"><img class="w-100" src="{% static 'chatweb/img/bg-img/adds.png' %}" alt=""></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- *****Blog Area End ***** -->
+
+  <!-- ******* All JS ******* -->
+  <!-- jQuery js -->
+  <script src="{% static 'chatweb/js/jquery.min.js' %}"></script>
+  <!-- Popper js -->
+  <script src="{% static 'chatweb/js/popper.min.js' %}"></script>
+  <!-- Bootstrap js -->
+  <script src="{% static 'chatweb/js/bootstrap.min.js' %}"></script>
+  <!-- All js -->
+  <script src="{% static 'chatweb/js/dento.bundle.js' %}"></script>
+  <!-- Active js -->
+  <script src="{% static 'chatweb/js/default-assets/active.js' %}"></script>
+
+</body>
+
+</html>
