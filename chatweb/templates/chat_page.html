@@ -74,6 +74,7 @@
               <div class="classynav">
                 <ul id="nav">
                   <li><a href="{% url 'home' %}">خروج</a></li>
+                  <li><a href="{% url 'chat_start' %}">صفحه کاربری</a></li>
                 </ul>
               </div>
               <!-- Nav End -->
@@ -85,16 +86,13 @@
   </header>
   <!-- ***** Header Area End ***** -->
 
-  <!-- ***** Breadcrumb Area Start ***** -->
-  <div class="breadcumb-area bg-img bg-gradient-overlay" style="background-image: url({% static 'chatweb/img/bg-img/chating.png' %});"></div>
-  <!-- ***** Breadcrumb Area End ***** -->
-
   <!-- *****Blog Area Start ***** -->
   <section class="dento-blog-area mt-50" style="background-image: url({% static 'chatweb/img/bg-img/messaging.jpg' %}); background-attachment: fixed;">
     <div class="container">
       <div class="row">
         <div class="col-12 col-lg-8">
 
+          <br>
           {% for i in dialog %}
           <!-- Single Blog Item  show messages here-->
           <div class="single-blog-item style-2 d-flex flex-wrap align-items-center mb-50">

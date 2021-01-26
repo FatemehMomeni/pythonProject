@@ -47,7 +47,8 @@ def sign_in(request):
             valid = UserPersonality.objects.filter(password=password_in, username=username_in)
             if valid:
                 info = main_page()
-                return render(request, 'main_page.html', {'username_in': username_in, 'my_contacts_email': info[0],
+                return render(request, 'main_page.html', {'username_in': username_in,
+                                                          'my_contacts_email': [info[0] for k in range(len(info[0]))][0],
                                                           'my_contacts_name': info[1], 'pv': info[2],
                                                           'group_name': info[3], 'channel_name': info[4]})
             else:
@@ -74,7 +75,23 @@ def main_page():
     pv = privates.values_list('name')
     group_name = Public.objects.values_list('group_name')
     channel_name = Channel.objects.values_list('channel_name')
-    return my_contacts_email, my_contacts_name, pv, group_name, channel_name
+
+    my_cont_email = []
+    my_cont_name = []
+    my_pv = []
+    my_groups = []
+    my_channels = []
+    for i in range(len(my_contacts_email)):
+        my_cont_email.append(my_contacts_email[i][0])
+        my_cont_name.append(my_contacts_name[i][0])
+    for i in range(len(pv)):
+        my_pv.append(pv[i][0])
+    for i in range(len(group_name)):
+        my_groups.append(group_name[i][0])
+    for i in range(len(channel_name)):
+        my_channels.append(channel_name[i][0])
+
+    return my_cont_email, my_cont_name, my_pv, my_groups, my_channels
 
 
 def start_chat(request):
@@ -83,10 +100,10 @@ def start_chat(request):
         print("***********************")
         name = request.POST['name']
         print(str(name) + "***********************")
-        valid = Contacts.objects.filter(password=user_password, name=name)
-        #valid = user.filter(name=name)
-        if not(name.find('group')) and not(name.find('channel')):
-            if valid:
+        if (name.find('group')) and (name.find('channel')):
+            print("nots are working correctly***********************")
+            if Contacts.objects.filter(password=user_password, name=name):
+                valid = Contacts.objects.filter(password=user_password, name=name)
                 print(str(valid))
                 print("contact**********************")
                 message_location = 'private'
@@ -109,33 +126,31 @@ def start_chat(request):
                     return render(request, 'mani_page.html', {'message': 'مخاطبی با این نام ندارید'})
             elif Public.objects.filter(group_name=name):
                 print("group*****************************")
-                valid3 = Public.objects.filter(group_name=name)
+                valid3 = PublicInfo.objects.filter(group_name=name)
                 user_group = find_me(valid3)
                 if user_group:
                     message_location = 'group'
                     n_group = name
-                    members = PublicInfo.objects.values_list('mem1_name', 'mem2_name', 'mem3_name',
-                                                             'mem4_name', 'mem5_name')
-                    dialog = valid3.values_list('mem1Msg', 'mem2Msg', 'mem3Msg', 'mem4Msg',
-                                                'mem5Msg', 'myMsg')
+                    members = valid3.values_list('mem1_name', 'mem2_name', 'mem3_name', 'mem4_name', 'mem5_name')
+                    dialog = Public.objects.values_list('mem1Msg', 'mem2Msg', 'mem3Msg', 'mem4Msg', 'mem5Msg')
                     return render(request, 'chat_page.html', {'dialog': dialog, 'members': members})
                 else:
                     return render(request, 'mani_page.html', {'message': 'گروهی با این نام ندارید'})
             elif Channel.objects.filter(channel_name=name):
                 print("channel*****************************")
-                valid4 = Channel.objects.filter(channel_name=name)
+                valid4 = ChannelInfo.objects.filter(channel_name=name)
                 user_channel = find_me(valid4)
                 if user_channel:
                     message_location = 'channel'
                     n_channel = name
-                    members = PublicInfo.objects.values_list('mem1_name', 'mem2_name', 'mem3_name',
-                                                             'mem4_name', 'mem5_name')
-                    dialog = valid4.values_list('adminMsg')
+                    members = valid4.values_list('mem1_name', 'mem2_name', 'mem3_name', 'mem4_name', 'mem5_name')
+                    dialog = Channel.objects.values_list('adminMsg')
                     return render(request, 'chat_page.html', {'dialog': dialog, 'members': members})
                 else:
                     return render(request, 'mani_page.html', {'message': 'کانالی با این نام ندارید'})
             else:
                 email = request.POST['email']
+                print(email)
                 if not(email.find('group')) and not(email.find('channel')):
                     print("new contact*****************************")
                     exists = UserPersonality.objects.filter(email=email)
@@ -152,59 +167,66 @@ def start_chat(request):
                                                                   'group_name': info[3], 'channel_name': info[4]})
                     else:
                         return render(request, 'main_page.html', {'message': 'مخاطب فاقد حساب کاربری است'})
-                elif name.find('group'):
+                elif email.find('channel'):
                     print("new group*****************************")
-                    message_location = 'group'
-                    nm2 = request.POST['name']
-                    nm3 = request.POST['name2']
-                    nm4 = request.POST['name3']
-                    nm5 = request.POST['name4']
-                    email = email.replace('group', '')
-                    instance = PublicInfo()
-                    instance.group_name = email
-                    instance.mem1_name = user_name
-                    instance.mem2_name = nm2
-                    instance.mem3_name = nm3
-                    instance.mem4_name = nm4
-                    instance.mem5_name = nm5
-                    instance.save()
+                    print(email.find('group'))
+                    g_name = email.replace('group', '')
+                    if PublicInfo.objects.filter(group_name=g_name):
+                        return render(request, 'main_page.html', {'message': 'گروهی با این نام وجود دارد'})
+                    else:
+                        message_location = 'group'
+                        nm2 = request.POST['name']
+                        nm3 = request.POST['name2']
+                        nm4 = request.POST['name3']
+                        nm5 = request.POST['name4']
+                        instance = PublicInfo()
+                        instance.group_name = g_name
+                        instance.mem1_name = user_name
+                        instance.mem2_name = nm2
+                        instance.mem3_name = nm3
+                        instance.mem4_name = nm4
+                        instance.mem5_name = nm5
+                        instance.save()
 
-                    instance2 = Public()
-                    instance2.group_name = email
-                    instance2.save()
+                        instance2 = Public()
+                        instance2.group_name = email
+                        instance2.save()
 
-                    info = main_page()
-                    message = 'گروه ایجاد شد'
-                    return render(request, 'main_page.html', {'message': message, 'my_contacts_email': info[0],
-                                                              'my_contacts_name': info[1], 'pv': info[2],
-                                                              'group_name': info[3], 'channel_name': info[4]})
-                elif name.find('channel'):
+                        info = main_page()
+                        message = 'گروه ایجاد شد'
+                        return render(request, 'main_page.html', {'message': message, 'my_contacts_email': info[0],
+                                                                  'my_contacts_name': info[1], 'pv': info[2],
+                                                                  'group_name': info[3], 'channel_name': info[4]})
+                elif email.find('group'):
                     print("new channel*****************************")
-                    message_location = 'channel'
-                    nm2 = request.POST['name']
-                    nm3 = request.POST['name2']
-                    nm4 = request.POST['name3']
-                    nm5 = request.POST['name4']
-                    email = email.replace('channel', '')
-                    instance = ChannelInfo()
-                    instance.channel_name = email
-                    instance.mem1_name = user_name
-                    instance.mem2_name = nm2
-                    instance.mem3_name = nm3
-                    instance.mem4_name = nm4
-                    instance.mem5_name = nm5
-                    instance.save()
+                    c_name = email.replace('channel', '')
+                    if ChannelInfo.objects.filter(channel_name=c_name):
+                        return render(request, 'main_page.html', {'message': 'کانالی با این نام وجود دارد'})
+                    else:
+                        message_location = 'channel'
+                        nm2 = request.POST['name']
+                        nm3 = request.POST['name2']
+                        nm4 = request.POST['name3']
+                        nm5 = request.POST['name4']
+                        instance = ChannelInfo()
+                        instance.channel_name = c_name
+                        instance.mem1_name = user_name
+                        instance.mem2_name = nm2
+                        instance.mem3_name = nm3
+                        instance.mem4_name = nm4
+                        instance.mem5_name = nm5
+                        instance.save()
 
-                    instance2 = Channel()
-                    instance2.channel_name = email
-                    instance2.is_admin = True
-                    instance2.save()
+                        instance2 = Channel()
+                        instance2.channel_name = email
+                        instance2.is_admin = True
+                        instance2.save()
 
-                    info = main_page()
-                    message = 'کانال ایجاد شد'
-                    return render(request, 'main_page.html', {'message': message, 'my_contacts_email': info[0],
-                                                              'my_contacts_name': info[1], 'pv': info[2],
-                                                              'group_name': info[3], 'channel_name': info[4]})
+                        info = main_page()
+                        message = 'کانال ایجاد شد'
+                        return render(request, 'main_page.html', {'message': message, 'my_contacts_email': info[0],
+                                                                  'my_contacts_name': info[1], 'pv': info[2],
+                                                                  'group_name': info[3], 'channel_name': info[4]})
     else:
         return render(request, 'main_page.html', {})
 
@@ -219,7 +241,6 @@ def chat_page_pv(my_message):
     instance.contactMsg = ''
     instance.msgTime = datetime.datetime.now()
     instance.save()
-
     # -------------------------create a record for my contact------------------------
     send = UserPersonality.objects.filter(username=n_pv)
     find = send.values_list('password')
@@ -230,7 +251,7 @@ def chat_page_pv(my_message):
     instance_s.myMsg = ''
     instance_s.contactMsg = my_message
     instance_s.msgTime = instance.msgTime
-    instance_s.save(my_message, instance.msgTime)
+    instance_s.save()
 
     pv_n = Private.objects.filter(name=n_pv)
     new_dialog = pv_n.values_list('myMsg', 'contactMsg')
@@ -265,15 +286,15 @@ def chat_page_group(my_message):
 
 
 def find_me(valid):
-    if valid.values_list('mem1_name') == user_name:
+    if valid.filter(mem1_name=user_name):
         return 1
-    elif valid.values_list('mem2_name') == user_name:
+    elif valid.filter(mem2_name=user_name):
         return 2
-    elif valid.values_list('mem3_name') == user_name:
+    elif valid.filter(mem3_name=user_name):
         return 3
-    elif valid.values_list('mem4_name') == user_name:
+    elif valid.filter(mem4_name=user_name):
         return 4
-    elif valid.values_list('mem5_name') == user_name:
+    elif valid.filter(mem5_name=user_name):
         return 5
     else:
         return 0
@@ -321,3 +342,8 @@ def send_msg(request):
                 return render(request, 'chat_page.html', {})
     else:
         return render(request, 'chat_page.html', {})
+
+
+"""a1 = Public.objects.filter(id=1)
+a2 = a1.values_list("group_name")
+print(a2[0][0])"""

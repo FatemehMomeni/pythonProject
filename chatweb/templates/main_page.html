@@ -206,9 +206,6 @@
                   <div class="col-12">
                     <button type="submit" class="btn dento-btn" style="left:25%;">افزودن</button>
                   </div>
-                  <form action="{% url 'chat_start' %}" method="GET" style="text-align:center;">
-                    <h5>{{ message }}</h5>
-                  </form>
                 </div>
               </form>
 
@@ -223,6 +220,10 @@
   </section>
   <!-- *****Blog Area End ***** -->
 
+  <form action="{% url 'chat_start' %}" method="GET" style="text-align:center;">
+    <h4>{{ message }}</h4>
+  </form>
+
   <!-- ***** Services Area Start ***** -->
   <section class="dento-services-area mt-50 mb-50">
     <div class="container">
@@ -234,7 +235,7 @@
             <div class="icon--">
               <img src="{% static 'chatweb/img/bg-img/private2.png' %}" alt="">
             </div>
-            <p id="pvs">{{ pv }}</p>
+            <p>{{ pv }}</p>
           </div>
           <form action="{% url 'chat_start' %}" method="post">
             {% csrf_token %}
@@ -250,7 +251,7 @@
             <div class="icon--">
               <img src="{% static 'chatweb/img/bg-img/groups.jpg' %}" alt="">
             </div>
-            <p id="groups">{{ group_name }}</p>
+            <p>{{ group_name }}</p>
           </div>
           <form action="{% url 'chat_start' %}" method="post">
             {% csrf_token %}
@@ -266,7 +267,7 @@
             <div class="icon--">
               <img src="{% static 'chatweb/img/bg-img/channel2.png' %}" alt="">
             </div>
-            <p id="channels">{{ channel_name }}</p>
+            <p>{{ channel_name }}</p>
           </div>
           <form action="{% url 'chat_start' %}" method="post">
             {% csrf_token %}
@@ -275,7 +276,6 @@
             </div>
           </form>
         </div>
-
       </div>
     </div>
   </section>
