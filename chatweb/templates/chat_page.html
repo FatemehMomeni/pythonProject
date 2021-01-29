@@ -64,12 +64,10 @@
 
             <!-- Menu -->
             <div class="classy-menu">
-
               <!-- Close Button -->
               <div class="classycloseIcon">
                 <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
               </div>
-
               <!-- Nav Start -->
               <div class="classynav">
                 <ul id="nav">
@@ -86,6 +84,10 @@
   </header>
   <!-- ***** Header Area End ***** -->
 
+  <div style="text-align: center;">
+    <h5>{{ message }}</h5>
+  </div>
+
   <!-- *****Blog Area Start ***** -->
   <section class="dento-blog-area mt-50" style="background-image: url({% static 'chatweb/img/bg-img/messaging.jpg' %}); background-attachment: fixed;">
     <div class="container">
@@ -100,7 +102,7 @@
             <div class="blog-thumbnail"></div>
             <!-- Blog Content -->
             <div class="blog-content" style="border: 1px solid black; background-color:#E0FFFF;">
-              <p><i class="icon_chat_alt"></i> {{ name }}:</p>
+              <p><i class="icon_chat_alt"></i> {{ member1 }} , {{ member2 }} , {{ member3 }} , {{ member4 }} , {{ member5 }}:</p>
               <p class="post-title">{{ i }}</p>
               <div class="post-meta">
                 <p><i class="icon_clock_alt"></i></p>

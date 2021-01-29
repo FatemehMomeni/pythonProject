@@ -5,8 +5,8 @@ class UserPersonality(models.Model):
     first_name = models.TextField(max_length=20, default='first name')
     last_name = models.TextField(max_length=50, default='last name')
     email = models.EmailField()
-    username = models.TextField(max_length=20, default='chatroom')
-    password = models.TextField(primary_key=True, max_length=15)
+    username = models.TextField(primary_key=True, max_length=20, default='chatroom')
+    password = models.TextField(max_length=15)
 
     objects = models.Manager()
 
@@ -31,7 +31,7 @@ class Private(models.Model):
 
 
 class PublicInfo(models.Model):
-    group_name = models.TextField(default='Group')
+    group_name = models.TextField(primary_key=True)
     mem1_name = models.TextField(max_length=20, default='member1', null=True)
     mem2_name = models.TextField(max_length=20, default='member2', null=True)
     mem3_name = models.TextField(max_length=20, default='member3', null=True)
@@ -54,7 +54,7 @@ class Public(models.Model):
 
 
 class ChannelInfo(models.Model):
-    channel_name = models.TextField(default='channel')
+    channel_name = models.TextField(primary_key=True)
     mem1_name = models.TextField(max_length=20, default='member1', null=True)
     mem2_name = models.TextField(max_length=20, default='member2', null=True)
     mem3_name = models.TextField(max_length=20, default='member3', null=True)
@@ -67,7 +67,6 @@ class ChannelInfo(models.Model):
 class Channel(models.Model):
     channel_name = models.TextField(default='channel')
     adminMsg = models.TextField(default='', null=True)
-    is_admin = models.BooleanField(default=False)
     msgTime = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)
 
     objects = models.Manager()
